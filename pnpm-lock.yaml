@@ -18,6 +18,9 @@ overrides:
   source-map-js: 1.2.2
   undici: ^7.29.1
 
+patchedDependencies:
+  braces@3.0.3: b0fbbded17e1eaed31b061fdc97f74c014a6435cd807028fa62ec36751fa1d4a
+
 importers:
 
   .:
@@ -4624,7 +4627,7 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
-  braces@3.0.3:
+  braces@3.0.3(patch_hash=b0fbbded17e1eaed31b061fdc97f74c014a6435cd807028fa62ec36751fa1d4a):
     dependencies:
       fill-range: 7.1.1
 
@@ -5784,7 +5787,7 @@ snapshots:
 
   micromatch@4.0.8:
     dependencies:
-      braces: 3.0.3
+      braces: 3.0.3(patch_hash=b0fbbded17e1eaed31b061fdc97f74c014a6435cd807028fa62ec36751fa1d4a)
       picomatch: 2.3.2
 
   mime-db@1.54.0: {}
