@@ -84,9 +84,12 @@ describe("published host integration bundle", () => {
         ),
       ).toEqual([]);
 
+      const rootPrefix = PACKAGE_ROOT.endsWith(path.sep)
+        ? PACKAGE_ROOT
+        : `${PACKAGE_ROOT}${path.sep}`;
       for (const relative of canonicalFiles) {
         const content = await readFile(path.join(SKILL_ROOT, relative), "utf8");
-        expect(content).not.toContain(PACKAGE_ROOT);
+        expect(content).not.toContain(rootPrefix);
       }
     } finally {
       await rm(cache, { force: true, recursive: true });
