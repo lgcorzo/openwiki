@@ -1,0 +1,158 @@
+diff --git a/dist/cjs/client/auth.js b/dist/cjs/client/auth.js
+index 4c87a15f58e385da47145658ea1d82f5d4f82285..72868fe45aca6eb688b6dd5a33fa5c9007556acf 100644
+--- a/dist/cjs/client/auth.js
++++ b/dist/cjs/client/auth.js
+@@ -557,7 +557,7 @@ async function discoverOAuthProtectedResourceMetadata(serverUrl, opts, fetchFn =
+  */
+ async function fetchWithCorsRetry(url, headers, fetchFn = fetch) {
+     try {
+-        return await (0, transport_js_1.fetchWithinOrigin)(fetchFn)(url, { headers });
++        return await (0, transport_js_1.fetchWithinOrigin)(fetchFn)(url, { headers, redirect: 'manual' });
+     }
+     catch (error) {
+         if (error instanceof TypeError) {
+diff --git a/dist/cjs/experimental/tasks/stores/in-memory.js b/dist/cjs/experimental/tasks/stores/in-memory.js
+index f7cf8deeee1609411a9a73101f23c5e8ce4b21d5..771d1a6fb921082df5bd5783f6e351b4b0e41b00 100644
+--- a/dist/cjs/experimental/tasks/stores/in-memory.js
++++ b/dist/cjs/experimental/tasks/stores/in-memory.js
+@@ -42,7 +42,7 @@ class InMemoryTaskStore {
+      */
+     lookup(taskId, sessionId) {
+         const stored = this.tasks.get(taskId);
+-        if (stored && sessionId !== undefined && stored.sessionId !== undefined && stored.sessionId !== sessionId) {
++        if (stored && stored.sessionId !== sessionId) {
+             return undefined;
+         }
+         return stored;
+diff --git a/dist/cjs/server/auth/middleware/bearerAuth.js b/dist/cjs/server/auth/middleware/bearerAuth.js
+index cc4487b5269a54646c43a66f91f60bb375284842..b30e3e3e0566b6b981b02945f856ded37f6085f2 100644
+--- a/dist/cjs/server/auth/middleware/bearerAuth.js
++++ b/dist/cjs/server/auth/middleware/bearerAuth.js
+@@ -35,7 +35,8 @@ function requireBearerAuth({ verifier, requiredScopes = [], resourceMetadataUrl,
+             }
+             const authInfo = await verifier.verifyAccessToken(token);
+             // Check if the token was issued for this server (if configured)
+-            if (expectedResource !== undefined && !sameResource(authInfo.resource, expectedResource)) {
++            const hasResource = Array.isArray(authInfo.resource) ? authInfo.resource.some(r => sameResource(r, expectedResource)) : sameResource(authInfo.resource, expectedResource);
++            if (expectedResource !== undefined && !hasResource) {
+                 throw new errors_js_1.InvalidTokenError('Token was not issued for this resource');
+             }
+             // Check if token has the required scopes (if any)
+diff --git a/dist/cjs/server/requestBody.js b/dist/cjs/server/requestBody.js
+index df7394b5fdc4e7262209b5593a1ca82165df02c5..43dd030847f15ce4c3d71161c2a67cb1745fcea8 100644
+--- a/dist/cjs/server/requestBody.js
++++ b/dist/cjs/server/requestBody.js
+@@ -51,6 +51,7 @@ async function readRequestBody(request, maxBytes = exports.DEFAULT_MAX_REQUEST_B
+             }
+             received += value.byteLength;
+             if (received > maxBytes) {
++                await reader.cancel();
+                 return { tooLarge: true };
+             }
+             text += decoder.decode(value, { stream: true });
+diff --git a/dist/cjs/shared/transport.js b/dist/cjs/shared/transport.js
+index effe8aa13dc6a541ae6d19095206a371c6636a34..35975f403d61c401ddacf82e7c2ff43b0700d195 100644
+--- a/dist/cjs/shared/transport.js
++++ b/dist/cjs/shared/transport.js
+@@ -76,9 +76,20 @@ function followWithinOrigin(baseFetch, url, init, response, followed = 0) {
+     if (addsUserinfo || !isWithinOrigin(from, target)) {
+         return undefined;
+     }
++    const headers = normalizeHeaders(init?.headers);
++    if (from.origin !== target.origin) {
++        delete headers['authorization']; delete headers['Authorization'];
++        delete headers['proxy-authorization']; delete headers['Proxy-Authorization'];
++        delete headers['cookie']; delete headers['Cookie'];
++    }
++    const nextInit = { ...init, headers };
++    if (response.status === 301 || response.status === 302 || response.status === 303) {
++        nextInit.method = 'GET';
++        delete nextInit.body;
++    }
+     return Promise.resolve(response.body?.cancel())
+-        .then(() => baseFetch(target, { ...init, redirect: 'manual' }))
+-        .then(next => followWithinOrigin(baseFetch, target, init, next, followed + 1) ?? next);
++        .then(() => baseFetch(target, { ...nextInit, redirect: 'manual' }))
++        .then(next => followWithinOrigin(baseFetch, target, nextInit, next, followed + 1) ?? next);
+ }
+ const followingFetches = new WeakSet();
+ /** @internal Wraps a fetch for `redirectPolicy: 'follow'`: `fetchWithinOrigin` returns the result as it is, so redirects are left to the fetch. */
+diff --git a/dist/esm/client/auth.js b/dist/esm/client/auth.js
+index 9b184c011ffa092078a7ed951be21a2bd99d5f89..4551f962b204f150e677706206a6b91d2c0efc13 100644
+--- a/dist/esm/client/auth.js
++++ b/dist/esm/client/auth.js
+@@ -532,7 +532,7 @@ export async function discoverOAuthProtectedResourceMetadata(serverUrl, opts, fe
+  */
+ async function fetchWithCorsRetry(url, headers, fetchFn = fetch) {
+     try {
+-        return await fetchWithinOrigin(fetchFn)(url, { headers });
++        return await fetchWithinOrigin(fetchFn)(url, { headers, redirect: 'manual' });
+     }
+     catch (error) {
+         if (error instanceof TypeError) {
+diff --git a/dist/esm/experimental/tasks/stores/in-memory.js b/dist/esm/experimental/tasks/stores/in-memory.js
+index 658af08b7760f80c1164db6128c64d11e56323dc..9943ae52f373be955b812c8ba43ab696bdeb590a 100644
+--- a/dist/esm/experimental/tasks/stores/in-memory.js
++++ b/dist/esm/experimental/tasks/stores/in-memory.js
+@@ -39,7 +39,7 @@ export class InMemoryTaskStore {
+      */
+     lookup(taskId, sessionId) {
+         const stored = this.tasks.get(taskId);
+-        if (stored && sessionId !== undefined && stored.sessionId !== undefined && stored.sessionId !== sessionId) {
++        if (stored && stored.sessionId !== sessionId) {
+             return undefined;
+         }
+         return stored;
+diff --git a/dist/esm/server/auth/middleware/bearerAuth.js b/dist/esm/server/auth/middleware/bearerAuth.js
+index 6cedbc584a253c83831ee9603e1039d1bedaa368..d7d2f01c363048cd81d9c571630fb430f93f8a6e 100644
+--- a/dist/esm/server/auth/middleware/bearerAuth.js
++++ b/dist/esm/server/auth/middleware/bearerAuth.js
+@@ -32,7 +32,8 @@ export function requireBearerAuth({ verifier, requiredScopes = [], resourceMetad
+             }
+             const authInfo = await verifier.verifyAccessToken(token);
+             // Check if the token was issued for this server (if configured)
+-            if (expectedResource !== undefined && !sameResource(authInfo.resource, expectedResource)) {
++            const hasResource = Array.isArray(authInfo.resource) ? authInfo.resource.some(r => sameResource(r, expectedResource)) : sameResource(authInfo.resource, expectedResource);
++            if (expectedResource !== undefined && !hasResource) {
+                 throw new InvalidTokenError('Token was not issued for this resource');
+             }
+             // Check if token has the required scopes (if any)
+diff --git a/dist/esm/server/requestBody.js b/dist/esm/server/requestBody.js
+index baa311ae12b930f54bfcdbb8844383fae62315a4..d016a31064617ceb39cc9d9cca5c2cdf29ccf61b 100644
+--- a/dist/esm/server/requestBody.js
++++ b/dist/esm/server/requestBody.js
+@@ -45,6 +45,7 @@ export async function readRequestBody(request, maxBytes = DEFAULT_MAX_REQUEST_BO
+             }
+             received += value.byteLength;
+             if (received > maxBytes) {
++                await reader.cancel();
+                 return { tooLarge: true };
+             }
+             text += decoder.decode(value, { stream: true });
+diff --git a/dist/esm/shared/transport.js b/dist/esm/shared/transport.js
+index 86f39b4c0ec4146a036b25f16545975da9f48202..951d67995befa2a32a8eeaaceefdf0858958e34d 100644
+--- a/dist/esm/shared/transport.js
++++ b/dist/esm/shared/transport.js
+@@ -67,9 +67,20 @@ export function followWithinOrigin(baseFetch, url, init, response, followed = 0)
+     if (addsUserinfo || !isWithinOrigin(from, target)) {
+         return undefined;
+     }
++    const headers = normalizeHeaders(init?.headers);
++    if (from.origin !== target.origin) {
++        delete headers['authorization']; delete headers['Authorization'];
++        delete headers['proxy-authorization']; delete headers['Proxy-Authorization'];
++        delete headers['cookie']; delete headers['Cookie'];
++    }
++    const nextInit = { ...init, headers };
++    if (response.status === 301 || response.status === 302 || response.status === 303) {
++        nextInit.method = 'GET';
++        delete nextInit.body;
++    }
+     return Promise.resolve(response.body?.cancel())
+-        .then(() => baseFetch(target, { ...init, redirect: 'manual' }))
+-        .then(next => followWithinOrigin(baseFetch, target, init, next, followed + 1) ?? next);
++        .then(() => baseFetch(target, { ...nextInit, redirect: 'manual' }))
++        .then(next => followWithinOrigin(baseFetch, target, nextInit, next, followed + 1) ?? next);
+ }
+ const followingFetches = new WeakSet();
+ /** @internal Wraps a fetch for `redirectPolicy: 'follow'`: `fetchWithinOrigin` returns the result as it is, so redirects are left to the fetch. */

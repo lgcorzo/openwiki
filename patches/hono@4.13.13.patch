@@ -1,0 +1,26 @@
+diff --git a/dist/cjs/middleware/serve-static/index.js b/dist/cjs/middleware/serve-static/index.js
+index 79876a348b9a725c64ce0b7e1a32c39688cddb26..62657345db34b348670b4585407001e405356aed 100644
+--- a/dist/cjs/middleware/serve-static/index.js
++++ b/dist/cjs/middleware/serve-static/index.js
+@@ -24,7 +24,7 @@ const serveStatic = (options) => {
+		if (options.path) filename = options.path;
+		else try {
+			if (!options.allowPercentInPath && c.req.path.includes("%")) throw new Error();
+-			filename = require_utils_url.tryDecodeURI(c.req.path);
++			filename = c.req.path;
+			if (/(?:^|[\/\\])\.{1,2}(?:$|[\/\\])|[\/\\]{2,}|\\/.test(filename)) throw new Error();
+		} catch {
+			await options.onNotFound?.(c.req.path, c);
+diff --git a/dist/middleware/serve-static/index.js b/dist/middleware/serve-static/index.js
+index 7c01bfbe5999ed968a759f6de29badd4f931485c..03d5da0bd7177779ad60e98e28e20d45365d51cf 100644
+--- a/dist/middleware/serve-static/index.js
++++ b/dist/middleware/serve-static/index.js
+@@ -23,7 +23,7 @@ const serveStatic = (options) => {
+		if (options.path) filename = options.path;
+		else try {
+			if (!options.allowPercentInPath && c.req.path.includes("%")) throw new Error();
+-			filename = tryDecodeURI(c.req.path);
++			filename = c.req.path;
+			if (/(?:^|[\/\\])\.{1,2}(?:$|[\/\\])|[\/\\]{2,}|\\/.test(filename)) throw new Error();
+		} catch {
+			await options.onNotFound?.(c.req.path, c);

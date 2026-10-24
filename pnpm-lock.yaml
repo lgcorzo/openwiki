@@ -24,7 +24,10 @@ overrides:
   body-parser: ^2.4.0
 
 patchedDependencies:
+  '@modelcontextprotocol/sdk@1.32.2': bed23778fd05856bc11a779977bb0864ee4a34f49ff2095ca9c803a2536832ea
   braces@3.0.3: 41099d59f053f6bc8ec4a0b7aa302981d50decce7c896f4aa6aef7ca01991042
+  hono@4.13.13: 06d89ec7b8e04557ca9ce8caf428baedf4d66945779f42ba24ecf82b01623c97
+  launch-editor@2.14.2: 1a337d281d64186e2bba44fb9dbe837aea0024f7186efb7ada345f2fbf494c0d
 
 importers:
 
@@ -68,7 +71,7 @@ importers:
         version: 1.2.0(@langchain/core@1.2.18(@opentelemetry/api@1.9.1)(openai@7.36.0(@aws-sdk/credential-provider-node@3.972.86)(@smithy/signature-v4@5.7.4)(undici@7.30.1)(ws@8.22.0)(zod@4.6.7))(ws@8.22.0))
       '@modelcontextprotocol/sdk':
         specifier: ^1.32.2
-        version: 1.32.2(@cfworker/json-schema@4.1.1)(supports-color@7.2.0)(zod@4.6.7)
+        version: 1.32.2(patch_hash=bed23778fd05856bc11a779977bb0864ee4a34f49ff2095ca9c803a2536832ea)(@cfworker/json-schema@4.1.1)(supports-color@7.2.0)(zod@4.6.7)
       ci-info:
         specifier: ^4.4.0
         version: 4.4.0
@@ -3645,7 +3648,7 @@ snapshots:
       '@pnpm/deps.graph-sequencer': 1100.0.1
       cac: 7.1.0
       import-meta-resolve: 4.2.0
-      launch-editor: 2.14.2
+      launch-editor: 2.14.2(patch_hash=1a337d281d64186e2bba44fb9dbe837aea0024f7186efb7ada345f2fbf494c0d)
       package-manager-detector: 1.9.0
       semver: 7.8.5
       tinyexec: 1.3.1
@@ -3863,9 +3866,9 @@ snapshots:
 
   '@exodus/bytes@1.16.0': {}
 
-  '@hono/node-server@2.1.5(hono@4.13.13)':
+  '@hono/node-server@2.1.5(hono@4.13.13(patch_hash=06d89ec7b8e04557ca9ce8caf428baedf4d66945779f42ba24ecf82b01623c97))':
     dependencies:
-      hono: 4.13.13
+      hono: 4.13.13(patch_hash=06d89ec7b8e04557ca9ce8caf428baedf4d66945779f42ba24ecf82b01623c97)
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -4045,9 +4048,9 @@ snapshots:
     dependencies:
       '@chevrotain/types': 11.1.2
 
-  '@modelcontextprotocol/sdk@1.32.2(@cfworker/json-schema@4.1.1)(supports-color@7.2.0)(zod@4.6.7)':
+  '@modelcontextprotocol/sdk@1.32.2(patch_hash=bed23778fd05856bc11a779977bb0864ee4a34f49ff2095ca9c803a2536832ea)(@cfworker/json-schema@4.1.1)(supports-color@7.2.0)(zod@4.6.7)':
     dependencies:
-      '@hono/node-server': 2.1.5(hono@4.13.13)
+      '@hono/node-server': 2.1.5(hono@4.13.13(patch_hash=06d89ec7b8e04557ca9ce8caf428baedf4d66945779f42ba24ecf82b01623c97))
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -4057,7 +4060,7 @@ snapshots:
       eventsource-parser: 3.1.1
       express: 5.3.0(supports-color@7.2.0)
       express-rate-limit: 8.7.1(express@5.3.0(supports-color@7.2.0))(supports-color@7.2.0)
-      hono: 4.13.13
+      hono: 4.13.13(patch_hash=06d89ec7b8e04557ca9ce8caf428baedf4d66945779f42ba24ecf82b01623c97)
       jose: 6.2.12
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -5344,7 +5347,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.13.13: {}
+  hono@4.13.13(patch_hash=06d89ec7b8e04557ca9ce8caf428baedf4d66945779f42ba24ecf82b01623c97): {}
 
   hookified@1.15.1: {}
 
@@ -5622,7 +5625,7 @@ snapshots:
       openai: 7.36.0(@aws-sdk/credential-provider-node@3.972.86)(@smithy/signature-v4@5.7.4)(undici@7.30.1)(ws@8.22.0)(zod@4.6.7)
       ws: 8.22.0
 
-  launch-editor@2.14.2:
+  launch-editor@2.14.2(patch_hash=1a337d281d64186e2bba44fb9dbe837aea0024f7186efb7ada345f2fbf494c0d):
     dependencies:
       picocolors: 1.1.1
       shell-quote: 1.11.0

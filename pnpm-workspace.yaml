@@ -86,4 +86,7 @@ minimumReleaseAgeExclude:
 # Value is in minutes; 10080 = 1 week.
 minimumReleaseAge: 10080
 patchedDependencies:
+  "@modelcontextprotocol/sdk@1.32.2": patches/@modelcontextprotocol__sdk@1.32.2.patch
   braces@3.0.3: patches/braces@3.0.3.patch
+  hono@4.13.13: patches/hono@4.13.13.patch
+  launch-editor@2.14.2: patches/launch-editor@2.14.2.patch

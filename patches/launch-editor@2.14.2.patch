@@ -1,0 +1,41 @@
+diff --git a/construct-windows-launch-command.js b/construct-windows-launch-command.js
+index b755c077110771aef2bd6d88e0e69e5c3a60abcd..911f40dc4255c28cea967a8580db31ce0a103572 100644
+--- a/construct-windows-launch-command.js
++++ b/construct-windows-launch-command.js
+@@ -23,7 +23,7 @@
+ // `"` cannot appear in Windows paths, so it is outside the untrusted path input
+ // this sanitization protects.
+ function escapeCmdArgs(cmdArgs) {
+-  return cmdArgs.replace(/([&|<>,;=^])/g, '^$1')
++  return cmdArgs.replace(/([&|<>,;=^%])/g, '^$1')
+ }
+
+ // Need to double quote the editor path in case it contains spaces;
+diff --git a/get-args.js b/get-args.js
+index 13e750690c611ab73183c3f22c0f5c0265a7a1d7..4f200c85a4b0524807d858544fa2e34d3a0e140a 100644
+--- a/get-args.js
++++ b/get-args.js
+@@ -3,7 +3,10 @@ const path = require('path')
+
+ // normalize a file and optional line/column numbers into command line args for specific editors
+ module.exports = function getArgumentsForFile(editor, fileName, lineNumber, columnNumber = 1) {
+-  fileName = path.resolve(fileName)
++  fileName = path.resolve(fileName);
++  if (path.basename(fileName).startsWith("-")) {
++    fileName = "." + path.sep + path.relative(".", fileName);
++  }
+
+   if (
+     process.platform === 'linux' &&
+diff --git a/index.js b/index.js
+index 54fd0b0f4e3b3e894b2137f73d68753c1cb949e4..fae05a5a0f378926aa8e1e2f96099bfd28ef023b 100644
+--- a/index.js
++++ b/index.js
+@@ -63,7 +63,7 @@ function launchEditor(file, specifiedEditor, onErrorCallback) {
+     )
+   }
+
+-  if (!fs.existsSync(fileName)) {
++  if (!fileName || !fs.existsSync(fileName)) {
+     return
+   }
