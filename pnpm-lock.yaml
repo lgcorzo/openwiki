@@ -9,7 +9,7 @@ overrides:
   vite: ^8.3.5
   brace-expansion: 5.0.12
   fast-uri: ^3.1.9
-  hono: ^4.13.11
+  hono: ^4.13.13
   js-yaml@3: ^3.15.1
   js-yaml@4: ^4.3.1
   katex: 0.18.2
@@ -707,7 +707,7 @@ packages:
     resolution: {integrity: sha512-MgP/I06GdvsilDspMk/qmRzpk8LOUStP6jFAbSRi40W09DhoyUn+Mj7eyKICPqeYKybOjVFLVIAQzvu1bfIa7Q==}
     engines: {node: '>=20'}
     peerDependencies:
-      hono: ^4.13.11
+      hono: ^4.13.13
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
