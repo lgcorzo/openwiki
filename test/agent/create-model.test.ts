@@ -562,8 +562,12 @@ describe("createModel reasoning configuration", () => {
 
   test("serializes OpenAI GPT-5.6 effort in the Responses request", async () => {
     const savedOpenAiKey = process.env.OPENAI_API_KEY;
+    const savedOpenAiBaseUrl = process.env.OPENAI_BASE_URL;
+    const savedOpenAiApiBase = process.env.OPENAI_API_BASE;
     process.env[REASONING_EFFORT_KEY] = "max";
     process.env.OPENAI_API_KEY = "test-openai-key";
+    delete process.env.OPENAI_BASE_URL;
+    delete process.env.OPENAI_API_BASE;
     const fetchMock = vi.fn(() =>
       Promise.resolve(
         new Response(
@@ -617,6 +621,8 @@ describe("createModel reasoning configuration", () => {
       });
     } finally {
       restoreEnv("OPENAI_API_KEY", savedOpenAiKey);
+      restoreEnv("OPENAI_BASE_URL", savedOpenAiBaseUrl);
+      restoreEnv("OPENAI_API_BASE", savedOpenAiApiBase);
     }
   });
 

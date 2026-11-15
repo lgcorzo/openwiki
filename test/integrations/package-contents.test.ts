@@ -39,7 +39,10 @@ describe("published host integration bundle", () => {
         ["pack", "--dry-run", "--json", "--ignore-scripts", "--cache", cache],
         { cwd: PACKAGE_ROOT, maxBuffer: 5 * 1024 * 1024 },
       );
-      const reports = JSON.parse(stdout) as PackReport[];
+      const parsed = JSON.parse(stdout);
+      const reports: PackReport[] = Array.isArray(parsed)
+        ? (parsed as PackReport[])
+        : Object.values(parsed as Record<string, PackReport>);
       expect(reports).toHaveLength(1);
 
       const packedPaths = reports[0].files.map((file) => file.path);
