@@ -1,3 +1,5 @@
+Maintained fork of [langchain-ai/openwiki](https://github.com/langchain-ai/openwiki). It applies security patches and maintenance fixes on top of upstream. Part of the [Dark Gravity](https://github.com/lgcorzo/rust_CACD_autonomous_factory) factory. License: MIT.
+
 <!-- markdownlint-disable MD033 MD041 -->
 
 <div align="center">
@@ -752,3 +754,10 @@ Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) befo
 ## License
 
 [MIT](./LICENSE)
+
+---
+
+### Fork Maintenance & Agent Transparency
+
+- **Changes vs. Upstream:** Security dependency updates, CI/CD workflow fixes, and CodeQL remediation are tracked in the [commit history](https://github.com/lgcorzo/openwiki/commits) and [Pull Requests](https://github.com/lgcorzo/openwiki/pulls?q=is%3Apr).
+- **Agent Tagging (`[agent]`):** Commits and pull requests generated automatically by agents in the Dark Gravity pipeline are prefixed with `[agent]` to distinguish automated maintenance from manual work.
